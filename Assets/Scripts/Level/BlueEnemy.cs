@@ -9,6 +9,8 @@ public class BlueEnemy : MonoBehaviour
     public float flashDuration = 0.12f;
 
     private SpriteRenderer spriteRenderer;
+    private Collider2D boxCollider;
+    private PlayerRespawn respawn;
     private Color baseColor;
     private float flashTimer;
 
@@ -16,7 +18,20 @@ public class BlueEnemy : MonoBehaviour
     void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        boxCollider = GetComponent<Collider2D>();
         if (spriteRenderer != null) baseColor = spriteRenderer.color;
+    }
+
+    // Broken boxes come back when the player respawns, so a checkpoint before the box can't skip it
+    void Start()
+    {
+        respawn = FindFirstObjectByType<PlayerRespawn>();
+        if (respawn != null) respawn.OnRespawned += Restore;
+    }
+
+    void OnDestroy()
+    {
+        if (respawn != null) respawn.OnRespawned -= Restore;
     }
 
     void Update()
@@ -50,8 +65,16 @@ public class BlueEnemy : MonoBehaviour
 
     private void Break()
     {
-        // Turn the collider off right away so the dash carries on through, Destroy only happens at the end of the frame
-        GetComponent<Collider2D>().enabled = false;
-        Destroy(gameObject);
+        // Turn the collider off right away so the dash carries on through, then hide the box until the next respawn
+        boxCollider.enabled = false;
+        gameObject.SetActive(false);
+    }
+
+    private void Restore()
+    {
+        flashTimer = 0f;
+        if (spriteRenderer != null) spriteRenderer.color = baseColor;
+        boxCollider.enabled = true;
+        gameObject.SetActive(true);
     }
 }
