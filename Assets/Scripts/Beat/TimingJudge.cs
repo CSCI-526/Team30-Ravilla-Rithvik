@@ -88,6 +88,25 @@ namespace BeatTiming
             return Emit(new Judgement(tier, offset, beat));
         }
 
+        /// <summary>
+        /// Judge a press against the half-beat right after <paramref name="beat"/> (for "tap-tap" patterns).
+        /// Uses the same windows, shrunk if needed so they never reach the full beats on either side.
+        /// </summary>
+        public Judgement JudgeHalfBeat(int beat)
+        {
+            if (conductor == null || !conductor.IsRunning)
+                return Emit(new Judgement(Accuracy.Miss, 0, -1));
+
+            double target = conductor.DspTimeOfBeat(beat) + conductor.SecondsPerBeat * 0.5;
+            double offset = conductor.Now - inputLatency - target;
+            return Emit(new Judgement(Classify(offset, HalfBeatPerfectWindow, HalfBeatGoodWindow), offset, beat));
+        }
+
+        // A half-beat is only half as long, so cap the windows at a quarter beat to stop them overlapping the beats.
+        public float HalfBeatGoodWindow =>
+            conductor == null ? goodWindow : Mathf.Min(goodWindow, (float)conductor.SecondsPerBeat * 0.25f);
+        public float HalfBeatPerfectWindow => Mathf.Min(perfectWindow, HalfBeatGoodWindow * 0.6f);
+
         /// <summary>True while a press right now would score at least Good. Handy for UI.</summary>
         public bool InGoodWindow()
         {

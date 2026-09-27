@@ -48,6 +48,7 @@ GameObject:
   - component: {fileID: 7423819739317555884}
   - component: {fileID: 7151340643730769070}
   - component: {fileID: 5858162201658242377}
+  - component: {fileID: 2917226635044976516}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -217,6 +218,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
   moveSpeed: 8
   jumpForce: 8
+  fallGravityMultiplier: 2.5
+  maxFallSpeed: 20
   groundCheck: {fileID: 4471508699411751868}
   groundCheckRadius: 0.2
   groundLayer:
@@ -234,6 +237,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 620fff58451ebb54eabb83e0722d6906, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerDash
+  mode: 0
   perfectDashDistance: 4
   goodDashDistance: 2.5
   dashDuration: 0.12
@@ -288,3 +292,23 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerRespawn
   fallDeathY: -10
+--- !u!114 &2917226635044976516
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7045399334849665140}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4aa9331936314d81845280e8bdee848, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::JudgementPopup
+  offset: {x: 0, y: 1.7}
+  riseDistance: 0.5
+  duration: 0.6
+  textSize: 0.1
+  sortingOrder: 100
+  perfectColor: {r: 1, g: 0.85, b: 0.2, a: 1}
+  goodColor: {r: 0.35, g: 0.9, b: 1, a: 1}
+  missColor: {r: 1, g: 0.3, b: 0.3, a: 1}
