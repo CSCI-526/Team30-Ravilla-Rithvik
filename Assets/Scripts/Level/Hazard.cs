@@ -2,11 +2,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 // Hurts the player on contact. Put it on spikes, saws, lava or enemies.
-// Works with both trigger and solid colliders (use a solid one for lava so the player can stand in it).
+// Works with both trigger and solid colliders.
 [RequireComponent(typeof(Collider2D))]
 public class Hazard : MonoBehaviour
 {
     public int damage = 1;
+
+    // Kill the player outright instead of dealing damage (lava)
+    public bool killInstantly = false;
 
     // Players currently touching this hazard. Tracked with Enter/Exit instead of Stay,
     // because Stay stops firing once the player's Rigidbody falls asleep standing still.
@@ -17,9 +20,10 @@ public class Hazard : MonoBehaviour
     void FixedUpdate()
     {
         touching.RemoveWhere(player => player == null);
-        foreach (PlayerHealth player in touching)
+        // Copy first: killing the player removes them from the set
+        foreach (PlayerHealth player in new List<PlayerHealth>(touching))
         {
-            player.TakeDamage(damage);
+            Hurt(player);
         }
     }
 
@@ -39,7 +43,21 @@ public class Hazard : MonoBehaviour
         if (player == null) return;
 
         touching.Add(player);
-        player.TakeDamage(damage);
+        Hurt(player);
+    }
+
+    private void Hurt(PlayerHealth player)
+    {
+        if (killInstantly)
+        {
+            // The player respawns away from here, so stop tracking them
+            touching.Remove(player);
+            player.Kill();
+        }
+        else
+        {
+            player.TakeDamage(damage);
+        }
     }
 
     private void RemovePlayer(Collider2D other)

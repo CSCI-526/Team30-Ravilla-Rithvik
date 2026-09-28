@@ -26,6 +26,7 @@ public class PlayerMovement : MonoBehaviour
     private float horizontalInput;
     private bool isGrounded;
     private MovingPlatform currentPlatform;
+    private float knockbackTimer;
 
 
     void Start()
@@ -65,6 +66,13 @@ public class PlayerMovement : MonoBehaviour
         // PlayerDash controls velocity while dashing
         if (dash != null && dash.IsDashing) return;
 
+        // Being shoved: let the push carry the player instead of the movement keys
+        if (knockbackTimer > 0f)
+        {
+            knockbackTimer -= Time.fixedDeltaTime;
+            return;
+        }
+
         // Ride along with a moving platform we're standing on
         Vector2 platformVelocity = currentPlatform != null ? currentPlatform.Velocity : Vector2.zero;
         float yVelocity = rb.linearVelocity.y;
@@ -84,5 +92,13 @@ public class PlayerMovement : MonoBehaviour
 
         // Apply physics velocity for horizontal movement
         rb.linearVelocity = new Vector2(horizontalInput * moveSpeed + platformVelocity.x, yVelocity);
+    }
+
+    // Shove the player (e.g. hit by an enemy). Movement keys are ignored for 'duration' seconds.
+    public void Knockback(Vector2 velocity, float duration)
+    {
+        if (dash != null) dash.ResetDash();
+        rb.linearVelocity = velocity;
+        knockbackTimer = duration;
     }
 }

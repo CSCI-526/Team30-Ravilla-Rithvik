@@ -10,13 +10,24 @@ public class CameraFollow : MonoBehaviour
     public Vector2 minPosition = new Vector2(-10f, -5f);
     public Vector2 maxPosition = new Vector2(10f, 5f);
 
+    // Shifts the view this far ahead of the way the player is facing, so a landing spot across a long gap
+    // is on screen before the jump. 0 = keep the player centred.
+    public float lookAhead = 0f;
+    // Slower than smoothTime so turning around briefly doesn't swing the view
+    public float lookAheadSmoothTime = 0.5f;
+
     private Vector3 velocity;
+    private PlayerMovement targetMovement;
+    private float lookAheadX;
+    private float lookAheadVelocity;
 
 
     void Start()
     {
         if (target != null)
         {
+            targetMovement = target.GetComponent<PlayerMovement>();
+            lookAheadX = GetLookAheadTarget();
             transform.position = GetTargetPosition();
         }
     }
@@ -26,6 +37,7 @@ public class CameraFollow : MonoBehaviour
     {
         if (target == null) return;
 
+        lookAheadX = Mathf.SmoothDamp(lookAheadX, GetLookAheadTarget(), ref lookAheadVelocity, lookAheadSmoothTime);
         transform.position = Vector3.SmoothDamp(transform.position, GetTargetPosition(), ref velocity, smoothTime);
     }
 
@@ -34,13 +46,22 @@ public class CameraFollow : MonoBehaviour
     {
         if (target == null) return;
 
+        lookAheadX = GetLookAheadTarget();
+        lookAheadVelocity = 0f;
         transform.position = GetTargetPosition();
         velocity = Vector3.zero;
+    }
+
+    private float GetLookAheadTarget()
+    {
+        float facing = targetMovement != null ? targetMovement.FacingDirection : 1f;
+        return facing * lookAhead;
     }
 
     private Vector3 GetTargetPosition()
     {
         Vector2 pos = (Vector2)target.position + offset;
+        pos.x += lookAheadX;
 
         if (useBounds)
         {

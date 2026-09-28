@@ -19,6 +19,10 @@ public class BeatMover : MonoBehaviour
     // true: A -> B -> C -> B -> A, false: A -> B -> C -> A
     public bool pingPong = true;
 
+    // Runs the movement this many beats early. 0 = arrive exactly on the beat.
+    // A crusher uses this so it's already open a moment before the beat the player dashes on.
+    public float beatOffset = 0f;
+
     private Rigidbody2D rb;
     private Vector2 startPos;
 
@@ -52,7 +56,7 @@ public class BeatMover : MonoBehaviour
         }
 
         // Worked out from the beat clock every frame, so it never drifts from the music
-        double steps = conductor.SongBeats / Mathf.Max(1, beatsPerStep);
+        double steps = (conductor.SongBeats + beatOffset) / Mathf.Max(1, beatsPerStep);
         int step = (int)System.Math.Floor(steps);
         float phase = (float)(steps - step);
 
