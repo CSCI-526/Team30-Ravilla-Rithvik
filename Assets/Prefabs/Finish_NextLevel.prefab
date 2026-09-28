@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 3952012491017614903}
   - component: {fileID: 4385607009283242132}
   m_Layer: 0
-  m_Name: Finish_GameComplete
+  m_Name: Finish_NextLevel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ SpriteRenderer:
   m_SortingOrder: 0
   m_MaskInteraction: 0
   m_Sprite: {fileID: 7482667652216324306, guid: 311925a002f4447b3a28927169b83ea6, type: 3}
-  m_Color: {r: 1, g: 0.83, b: 0.28, a: 1}
+  m_Color: {r: 0.3, g: 1, b: 0.45, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -151,6 +151,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92a72b821a2504891b937607f0c5b33c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameComplete
-  message: GAME COMPLETE
-  endDelay: 3
+  message: LEVEL COMPLETE
+  endDelay: 2
   nextScene: 

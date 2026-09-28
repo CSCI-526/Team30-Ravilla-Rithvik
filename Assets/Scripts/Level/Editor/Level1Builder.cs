@@ -182,9 +182,10 @@ public static class Level1Builder
 
     static void Finish(float x)
     {
-        GameObject finish = Place("Finish_GameComplete", "Finish", x, 2f);
+        GameObject finish = Place("Finish_NextLevel", "Finish", x, 2f);
         var complete = finish.GetComponent<GameComplete>();
         complete.message = "LEVEL 1 COMPLETE";
+        complete.nextScene = "Level2";
         Record(complete);
     }
 
@@ -296,7 +297,7 @@ public static class Level1Builder
             .ToList();
         if (scenes.All(s => s.path != ScenePath))
         {
-            scenes.Insert(0, new EditorBuildSettingsScene(ScenePath, true));
+            scenes.Add(new EditorBuildSettingsScene(ScenePath, true));
         }
         EditorBuildSettings.scenes = scenes.ToArray();
     }

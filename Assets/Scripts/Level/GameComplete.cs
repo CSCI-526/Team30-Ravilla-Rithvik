@@ -3,13 +3,18 @@ using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-// Finish line of the last level: stops the player, shows GAME COMPLETE, then ends the game.
-// In the editor it exits Play mode; in a build (e.g. WebGL, which can't quit) R restarts from the first scene.
+// Finish line: stops the player, shows the message, then moves on after endDelay.
+// With nextScene set (Finish_NextLevel prefab) it loads that level.
+// Left empty (Finish_GameComplete, the last level) it ends the game: in the editor it exits Play mode;
+// in a build (e.g. WebGL, which can't quit) R restarts from the first scene.
 [RequireComponent(typeof(Collider2D))]
 public class GameComplete : MonoBehaviour
 {
     public string message = "GAME COMPLETE";
     public float endDelay = 3f;
+
+    // Scene to load when the delay ends, e.g. "Level2". Must be in Build Settings.
+    public string nextScene = "";
 
     public bool IsFinished { get; private set; }
 
@@ -52,6 +57,18 @@ public class GameComplete : MonoBehaviour
 
         timer += Time.unscaledDeltaTime;
         if (timer < endDelay) return;
+
+        if (!string.IsNullOrEmpty(nextScene))
+        {
+            if (Application.CanStreamedLevelBeLoaded(nextScene))
+            {
+                SceneManager.LoadScene(nextScene);
+                enabled = false;
+                return;
+            }
+            Debug.LogWarning($"Next scene '{nextScene}' isn't in Build Settings, ending the game instead.", this);
+            nextScene = "";
+        }
 
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
