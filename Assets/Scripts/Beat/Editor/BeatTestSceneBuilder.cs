@@ -8,7 +8,7 @@ namespace BeatTiming.EditorTools
     /// <summary>Menu: Tools > Beat Timing > Create Test Scene. Builds BeatTest.unity from scratch.</summary>
     public static class BeatTestSceneBuilder
     {
-        public const string ScenePath = "Assets/BeatTiming/Scenes/BeatTest.unity";
+        public const string ScenePath = "Assets/Scenes/BeatTest.unity";
 
         [MenuItem("Tools/Beat Timing/Create Test Scene")]
         public static void CreateTestScene()
