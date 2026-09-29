@@ -36,11 +36,15 @@ namespace BeatTiming
         /// <summary>dspTime at which beat 0 happens.</summary>
         public double BeatZeroDspTime { get; private set; }
 
-        /// <summary>Smoothed audio-clock time. Use this instead of AudioSettings.dspTime for visuals/input.</summary>
-        public double Now => smoothedDsp;
+        /// <summary>
+        /// Smooth audio-clock time. Use this instead of AudioSettings.dspTime for visuals, physics and input.
+        /// It advances with game time (so it moves evenly in FixedUpdate as well as Update) and is gently
+        /// pulled toward the audio clock, which itself only updates once per audio buffer.
+        /// </summary>
+        public double Now => Time.timeAsDouble + clockOffset;
 
         /// <summary>Seconds since beat 0 (negative during the start delay).</summary>
-        public double SongTime => IsRunning ? smoothedDsp - BeatZeroDspTime : 0.0;
+        public double SongTime => IsRunning ? Now - BeatZeroDspTime : 0.0;
 
         /// <summary>Position in beats, e.g. 4.25 = a quarter of the way from beat 4 to beat 5.</summary>
         public double SongBeats => SongTime / SecondsPerBeat;
@@ -66,8 +70,11 @@ namespace BeatTiming
             return dspTime - DspTimeOfBeat(nearestBeat);
         }
 
-        double smoothedDsp;
+        // Now = game time + clockOffset; the offset follows (audio time - game time) slowly
+        double clockOffset;
         double lastRawDsp;
+        const double OffsetFollow = 0.05;   // share of the error corrected per audio update
+        const double OffsetSnap = 0.05;     // seconds of drift after which we jump instead of easing
         int lastBeatFired = -1;
 
         void Awake()
@@ -78,7 +85,8 @@ namespace BeatTiming
                 return;
             }
             Instance = this;
-            smoothedDsp = lastRawDsp = AudioSettings.dspTime;
+            lastRawDsp = AudioSettings.dspTime;
+            clockOffset = lastRawDsp - Time.timeAsDouble;
         }
 
         void OnDestroy()
@@ -113,22 +121,19 @@ namespace BeatTiming
             // Keep the current beat position continuous when the tempo changes.
             double beats = SongBeats;
             bpm = newBpm;
-            if (IsRunning) BeatZeroDspTime = smoothedDsp - beats * SecondsPerBeat;
+            if (IsRunning) BeatZeroDspTime = Now - beats * SecondsPerBeat;
         }
 
         void Update()
         {
-            // dspTime only advances once per audio buffer, so it "steps".
-            // Extrapolate with frame time between steps to keep visuals smooth.
+            // dspTime only advances once per audio buffer, so it "steps". Each time it moves,
+            // ease the offset toward it rather than snapping, so Now never stalls or jumps.
             double raw = AudioSettings.dspTime;
             if (raw != lastRawDsp)
             {
                 lastRawDsp = raw;
-                smoothedDsp = raw;
-            }
-            else
-            {
-                smoothedDsp += Time.unscaledDeltaTime;
+                double error = (raw - Time.timeAsDouble) - clockOffset;
+                clockOffset += Math.Abs(error) > OffsetSnap ? error : error * OffsetFollow;
             }
 
             if (!IsRunning) return;

@@ -4,7 +4,7 @@ Rhythm system for the prototype: beat clock, Perfect/Good/Miss judging, visual b
 Built and tested in Unity 6000.3.22f1 (the project's version). No art or audio assets needed.
 
 ## Try it
-1. Open `Assets/BeatTiming/Scenes/BeatTest.unity`. If it's missing, recreate it with **Tools → Beat Timing → Create Test Scene**.
+1. Open `Assets/Scenes/BeatTest.unity`. If it's missing, recreate it with **Tools → Beat Timing → Create Test Scene**.
 2. Press Play, click in the Game view, and press Space when the ring flashes.
 
 It doesn't touch `SampleScene` or `InputSystem_Actions`. The test scene reads the keyboard directly.
@@ -63,3 +63,14 @@ Only the Dash code should call `Judge()`, once per press. Everything else should
 **Shortcut:** select the Player and click **Tools → Beat Timing → Add To Current Scene**. This adds the Beat System, the ring sized to the player, and `BeatDebugInput`, which lets Space trigger a scored press until the real Dash exists. Remove `BeatDebugInput` once Dash calls `Judge()` itself.
 
 To add it by hand: place one GameObject with `BeatConductor` + `TimingJudge` + `BeatMetronome`, add `BeatPulseRing` to the player, and add `BeatIconPulse` to the Dash icon.
+
+## Dash modes (PlayerDash → Mode)
+Switchable in the Inspector, even during Play, so the team can compare them:
+| Mode | Press pattern |
+|---|---|
+| **Two Beats** (default) | Press on a beat, then again on the very next beat |
+| **Single Beat** | Every on-beat press dashes |
+| **Double Tap** | Press on a beat, then again on the half-beat right after it. A soft half-beat tick plays in this mode. |
+
+A dash is Perfect (long, and breaks the blue enemy) only if every press in the pattern was Perfect.
+`JudgementPopup` on the Player shows PERFECT / GOOD / MISS above the player on every press.

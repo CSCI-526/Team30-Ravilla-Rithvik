@@ -2,9 +2,19 @@ using BeatTiming;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+// Which press pattern triggers a dash. Switchable in the Inspector (even during Play) to compare them.
+public enum DashMode
+{
+    TwoBeats,   // press on a beat, then again on the very next beat
+    SingleBeat, // every on-beat press dashes straight away
+    DoubleTap   // press on a beat, then again on the half-beat right after it ("tap-tap")
+}
+
 [RequireComponent(typeof(Rigidbody2D), typeof(PlayerMovement))]
 public class PlayerDash : MonoBehaviour
 {
+    public DashMode mode = DashMode.TwoBeats;
+
     //Dash distance depends on how close to the beat Space was pressed
     public float perfectDashDistance = 4f;
     public float goodDashDistance = 2.5f;
@@ -13,7 +23,7 @@ public class PlayerDash : MonoBehaviour
     public bool IsDashing => dashTimer > 0f;
     // True while the current dash came from two Perfect presses (only these break blue enemies)
     public bool IsPerfectDash => IsDashing && perfectDash;
-    // True after a successful first press, waiting for the second press on the next beat
+    // True after a successful first press, waiting for the second press (next beat or half-beat)
     public bool IsCharged => chargedBeat != NoCharge;
 
     private const int NoCharge = int.MinValue;
@@ -26,6 +36,8 @@ public class PlayerDash : MonoBehaviour
     private bool perfectDash;
     private int chargedBeat = NoCharge;
     private Accuracy chargedTier;
+    private DashMode lastMode;
+    private BeatMetronome metronome;
 
 
     void Start()
@@ -33,6 +45,8 @@ public class PlayerDash : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         movement = GetComponent<PlayerMovement>();
         normalGravity = rb.gravityScale;
+        lastMode = mode;
+        metronome = FindFirstObjectByType<BeatMetronome>();
     }
 
     void Update()
@@ -40,18 +54,35 @@ public class PlayerDash : MonoBehaviour
         TimingJudge judge = TimingJudge.Instance;
         if (judge == null) return;
 
-        // Drop the charge once the next beat's window has passed, so the UI doesn't show a stale charge
-        if (IsCharged && judge.Conductor != null)
+        // Switching mode mid-play (e.g. from the Inspector) starts fresh
+        if (mode != lastMode)
         {
-            double chargeExpires = judge.Conductor.DspTimeOfBeat(chargedBeat + 1) + judge.GoodWindow + judge.InputLatency;
-            if (judge.Conductor.Now > chargeExpires) chargedBeat = NoCharge;
+            chargedBeat = NoCharge;
+            lastMode = mode;
+        }
+
+        // The half-beat tick helps players find the second tap
+        if (metronome != null) metronome.OffbeatTicks = mode == DashMode.DoubleTap;
+
+        // Drop the charge once the second press's window has passed, so the UI doesn't show a stale charge
+        if (IsCharged && judge.Conductor != null && judge.Conductor.Now > ChargeExpiry(judge))
+        {
+            chargedBeat = NoCharge;
         }
 
         // Judge in Update so the press is timed on the exact frame it happened
         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame && !IsDashing)
         {
-            HandlePress(judge.Judge());
+            HandlePress(judge);
         }
+    }
+
+    private double ChargeExpiry(TimingJudge judge)
+    {
+        BeatConductor conductor = judge.Conductor;
+        if (mode == DashMode.DoubleTap)
+            return conductor.DspTimeOfBeat(chargedBeat) + conductor.SecondsPerBeat * 0.5 + judge.HalfBeatGoodWindow + judge.InputLatency;
+        return conductor.DspTimeOfBeat(chargedBeat + 1) + judge.GoodWindow + judge.InputLatency;
     }
 
     // Cancels an active dash and any stored charge, e.g. when the player respawns
@@ -62,8 +93,29 @@ public class PlayerDash : MonoBehaviour
         chargedBeat = NoCharge;
     }
 
-    // Dash takes two on-beat presses in a row: the first charges it, the second on the next beat fires it
-    private void HandlePress(Judgement judgement)
+    private void HandlePress(TimingJudge judge)
+    {
+        if (mode == DashMode.SingleBeat)
+        {
+            Judgement single = judge.Judge();
+            if (single.IsHit) StartDash(single.Tier == Accuracy.Perfect);
+            return;
+        }
+
+        if (mode == DashMode.DoubleTap && IsCharged)
+        {
+            // Second tap is timed against the half-beat after the first one
+            Judgement second = judge.JudgeHalfBeat(chargedBeat);
+            if (second.IsHit) StartDash(chargedTier == Accuracy.Perfect && second.Tier == Accuracy.Perfect);
+            chargedBeat = NoCharge;
+            return;
+        }
+
+        HandleChargedPress(judge.Judge());
+    }
+
+    // Two on-beat presses: the first charges the dash, the second (next beat, TwoBeats mode) fires it
+    private void HandleChargedPress(Judgement judgement)
     {
         // Miss: lose the charge, the pulse ring flashes red
         if (!judgement.IsHit)
@@ -72,7 +124,7 @@ public class PlayerDash : MonoBehaviour
             return;
         }
 
-        if (IsCharged && judgement.Beat == chargedBeat + 1)
+        if (mode == DashMode.TwoBeats && IsCharged && judgement.Beat == chargedBeat + 1)
         {
             // Perfect dash only if both presses were Perfect
             bool bothPerfect = chargedTier == Accuracy.Perfect && judgement.Tier == Accuracy.Perfect;

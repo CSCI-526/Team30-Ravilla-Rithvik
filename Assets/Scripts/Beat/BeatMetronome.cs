@@ -16,17 +16,27 @@ namespace BeatTiming
         [SerializeField, Min(0)] int accentEvery = 4;
         [SerializeField, Range(0f, 1f)] float volume = 0.6f;
         [SerializeField] bool muted;
+        [Tooltip("Also play a soft tick on every half-beat (used by the Double Tap dash).")]
+        [SerializeField] bool offbeatTicks;
+        [SerializeField, Range(0f, 1f)] float offbeatVolume = 0.3f;
 
-        // Two sources, alternated, so a scheduled tick never cuts off the previous one.
+        // Sources are alternated so a scheduled tick never cuts off the previous one.
         AudioSource[] sources;
         int nextSource;
-        int nextScheduledBeat;
+        // Scheduling runs in half-beat steps: even steps are beats, odd steps are half-beats.
+        int nextScheduledStep;
         const double LookAhead = 0.1;
 
         public bool Muted
         {
             get => muted;
             set => muted = value;
+        }
+
+        public bool OffbeatTicks
+        {
+            get => offbeatTicks;
+            set => offbeatTicks = value;
         }
 
         void Awake()
@@ -36,7 +46,7 @@ namespace BeatTiming
             if (tick == null) tick = MakeClick("Tick", 1000f);
             if (accentTick == null) accentTick = MakeClick("AccentTick", 1500f);
 
-            sources = new AudioSource[2];
+            sources = new AudioSource[3];
             for (int i = 0; i < sources.Length; i++)
             {
                 sources[i] = gameObject.AddComponent<AudioSource>();
@@ -48,23 +58,25 @@ namespace BeatTiming
         {
             if (conductor == null || !conductor.IsRunning) return;
 
-            // Skip any beats that are already in the past (e.g. after a hitch or restart).
-            int firstFuture = Mathf.Max(0, Mathf.CeilToInt((float)conductor.SongBeats));
-            if (nextScheduledBeat < firstFuture) nextScheduledBeat = firstFuture;
+            // Skip any steps that are already in the past (e.g. after a hitch or restart).
+            int firstFuture = Mathf.Max(0, Mathf.CeilToInt((float)conductor.SongBeats * 2f));
+            if (nextScheduledStep < firstFuture) nextScheduledStep = firstFuture;
 
-            double t = conductor.DspTimeOfBeat(nextScheduledBeat);
+            double t = conductor.DspTimeOfBeat(0) + nextScheduledStep * conductor.SecondsPerBeat * 0.5;
             if (t - AudioSettings.dspTime > LookAhead) return;
 
-            if (!muted)
+            bool onBeat = nextScheduledStep % 2 == 0;
+            if (!muted && (onBeat || offbeatTicks))
             {
-                bool accent = accentEvery > 0 && nextScheduledBeat % accentEvery == 0;
+                int beat = nextScheduledStep / 2;
+                bool accent = onBeat && accentEvery > 0 && beat % accentEvery == 0;
                 AudioSource s = sources[nextSource];
                 nextSource = (nextSource + 1) % sources.Length;
                 s.clip = accent ? accentTick : tick;
-                s.volume = volume;
+                s.volume = onBeat ? volume : offbeatVolume;
                 s.PlayScheduled(t);
             }
-            nextScheduledBeat++;
+            nextScheduledStep++;
         }
 
         static AudioClip MakeClick(string name, float frequency)
