@@ -1896,16 +1896,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b1f544809a83e4292b48f57b854ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LavaSurge
-  beatsPerBar: 4
+  beatsPerBar: 8
   surgeBeat: 0
-  surgeHeight: 2
-  surgeSpread: 0.3
+  surgeHeight: 1.5
+  surgeSpread: 0
   riseBeats: 0.15
-  holdBeats: 0.5
-  fallBeats: 0.35
+  holdBeats: 0.25
+  fallBeats: 0.25
   warnColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   surgeColor: {r: 1, g: 0.25, b: 0.05, a: 1}
-  deadlyFrom: 0.3
+  deadlyFrom: 0.5
 --- !u!1001 &528218002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2390,16 +2390,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b1f544809a83e4292b48f57b854ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LavaSurge
-  beatsPerBar: 4
+  beatsPerBar: 8
   surgeBeat: 2
-  surgeHeight: 2
-  surgeSpread: 0.3
+  surgeHeight: 1.5
+  surgeSpread: 0
   riseBeats: 0.15
-  holdBeats: 0.5
-  fallBeats: 0.35
+  holdBeats: 0.25
+  fallBeats: 0.25
   warnColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   surgeColor: {r: 1, g: 0.25, b: 0.05, a: 1}
-  deadlyFrom: 0.3
+  deadlyFrom: 0.5
 --- !u!1 &715475261
 GameObject:
   m_ObjectHideFlags: 0
@@ -5459,16 +5459,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b1f544809a83e4292b48f57b854ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LavaSurge
-  beatsPerBar: 4
+  beatsPerBar: 8
   surgeBeat: 0
-  surgeHeight: 2
-  surgeSpread: 0.3
+  surgeHeight: 1.5
+  surgeSpread: 0
   riseBeats: 0.15
-  holdBeats: 0.5
-  fallBeats: 0.35
+  holdBeats: 0.25
+  fallBeats: 0.25
   warnColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   surgeColor: {r: 1, g: 0.25, b: 0.05, a: 1}
-  deadlyFrom: 0.3
+  deadlyFrom: 0.5
 --- !u!1001 &1854977925
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5686,16 +5686,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08b1f544809a83e4292b48f57b854ff9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LavaSurge
-  beatsPerBar: 4
+  beatsPerBar: 8
   surgeBeat: 0
-  surgeHeight: 2
-  surgeSpread: 0.3
+  surgeHeight: 1.5
+  surgeSpread: 0
   riseBeats: 0.15
-  holdBeats: 0.5
-  fallBeats: 0.35
+  holdBeats: 0.25
+  fallBeats: 0.25
   warnColor: {r: 1, g: 0.85, b: 0.3, a: 1}
   surgeColor: {r: 1, g: 0.25, b: 0.05, a: 1}
-  deadlyFrom: 0.3
+  deadlyFrom: 0.5
 --- !u!1001 &2015437770
 PrefabInstance:
   m_ObjectHideFlags: 0
