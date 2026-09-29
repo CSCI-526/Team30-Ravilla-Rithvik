@@ -313,6 +313,10 @@ PrefabInstance:
       value: Crusher_1
       objectReference: {fileID: 0}
     - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 50
       objectReference: {fileID: 0}
@@ -353,8 +357,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: beatOffset
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[2].y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -1511,6 +1519,10 @@ PrefabInstance:
       value: Crusher_3
       objectReference: {fileID: 0}
     - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 64
       objectReference: {fileID: 0}
@@ -1551,8 +1563,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: beatOffset
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[2].y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -2458,6 +2474,10 @@ PrefabInstance:
       value: Crusher_2
       objectReference: {fileID: 0}
     - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 57
       objectReference: {fileID: 0}
@@ -2498,8 +2518,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: beatOffset
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[0].y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[1].y
@@ -4163,6 +4187,10 @@ PrefabInstance:
       value: Crusher
       objectReference: {fileID: 0}
     - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 318
       objectReference: {fileID: 0}
@@ -4203,8 +4231,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: beatOffset
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[2].y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5888,6 +5920,10 @@ PrefabInstance:
       value: Crusher_4
       objectReference: {fileID: 0}
     - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 3.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2844134917159403574, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: m_LocalPosition.x
       value: 71
       objectReference: {fileID: 0}
@@ -5928,8 +5964,12 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
+      propertyPath: beatOffset
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[0].y
-      value: 3
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5139402889655277340, guid: 1c90f26c0cda3b14290fd537c14fac16, type: 3}
       propertyPath: waypoints.Array.data[1].y
